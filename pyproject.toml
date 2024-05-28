@@ -1,0 +1,78 @@
+[tool.poetry]
+name = "pydantic-dynamic"
+version = "0.1.0"
+description = "Pydantic models that dynamically verify types when attributes are set."
+authors = ["Josh Orr <josh@orr.blue>"]
+packages = [{include = "pydantic_lazy"}]
+readme = "README.md"
+repository = "https://github.com/joshorr/pydantic-dynamic"
+classifiers = [
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "License :: OSI Approved :: The Unlicense (Unlicense)"
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+xsentinels = "^1.2.1"
+pydantic = "^2.5.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.2"
+pycodestyle = "^2.10.0"
+pytest-mock = "^3.10.0"
+pytest-pycodestyle = "^2.3.1"
+pdoc3 = "^0"
+black = {version = "*", allow-prereleases = true}
+mkdocstrings = { extras = ["python"], version = "^0" }
+mkdocs-autorefs = "^0"
+mkdocs-git-revision-date-plugin = "^0"
+mkdocs = "^1.4.2"
+mkdocs-material = "^9.0.12"
+mike = "^1.1.2"
+tomlkit = "^0.11.7"
+pyright = "^1.1.341"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.custom.xpublish]
+extra-module-docs = ['xsentinels', 'xloop', 'xinject', 'xurls']
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+
+# By default, reuse db schema
+# (speeds up unit test starts after first unit test run)
+# If test-db schmea gets messed up, drop `--reuse-db`
+# and it will recreate db next time you run unit tests.
+addopts = "--verbose --pycodestyle"
+
+testpaths = ["tests", "xurls"]
+python_files = "tests.py test_*.py *_tests.py tests/*"
+norecursedirs = "lib/* tests/scripts .serverless .eggs dist/* node_modules"
+
+[tool.black]
+line-length = 99
+target_version = ['py310']
+skip-string-normalization = 1
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
