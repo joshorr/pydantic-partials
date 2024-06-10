@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/joshorr/pydantic-partials/compare/v1.0.3...v1.0.4) (2024-06-10)
+
+
+### Documentation
+
+* added clarification around inheritance and default values. ([d09b8a0](https://github.com/joshorr/pydantic-partials/commit/d09b8a01f8a29d099687f9414f0640bf1d99d2c9))
+
 ## [1.0.3](https://github.com/joshorr/pydantic-partials/compare/v1.0.2...v1.0.3) (2024-06-10)
 
 
