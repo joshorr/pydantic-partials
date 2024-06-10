@@ -19,7 +19,7 @@ and can be missing from both validation and serialization.
 Very basic example is below:
 
 ```python
-from pydantic_partials import PartialModel, Missing, Partial
+from pydantic_partials import PartialModel, Missing
 
 
 class MyModel(PartialModel):
@@ -51,9 +51,7 @@ obj.another_field = 'assigned-value'
 
 # And now it's removed from the model-dump.
 assert obj.model_dump() == {'another_field': 'assigned-value'}
-
 ```
-
 
 You can turn off this default behavior by via `auto_partials` class argument or modeL_config option:
 
@@ -66,7 +64,6 @@ class TestModel1(PartialModel, auto_partials=False):
 class TestModel2(PartialModel):
     model_config = PartialConfigDict(auto_partials=False)
     ...
-
 ```
 
 You can disable this automatic function. This means you have complete control of exactly which field 
@@ -76,7 +73,7 @@ to mark a field as a partial field.  The generic simple makes the union to Missi
 Example of disabling auto_partials:
 
 ```python
-from pydantic_partials import PartialModel, Missing, MissingType, Partial, PartialConfigDict
+from pydantic_partials import PartialModel, Missing, MissingType, Partial
 from decimal import Decimal
 from pydantic import ValidationError
 
@@ -103,9 +100,43 @@ assert obj.partial_int is Missing
 assert obj.partial_str is Missing
 
 assert obj.required_decimal == Decimal('1.34')
-
 ```
 
 
 
+You can inherit from a model to make a partial-version of the inherited fields:
 
+```python
+from pydantic_partials import PartialModel, Missing
+from pydantic import ValidationError, BaseModel
+
+
+class TestModel(BaseModel):
+    name: str
+    value: str
+    some_null_by_default_field: str | None = None
+
+
+try:
+    TestModel()
+except ValidationError as e:
+    print(f'Pydantic will state `name` + `value` are required: {e}')
+else:
+    raise Exception('Pydantic should have required `required_decimal`.')    
+
+    
+class PartialTestModel(PartialModel, TestModel):
+    pass
+
+    
+obj = PartialTestModel(name='a-name')
+
+assert obj.name == 'a-name'
+assert obj.value is Missing
+assert obj.some_null_by_default_field is None
+```
+
+Notice that if a field has a default value, it's used instead of marking it as `Missing`.
+
+Also, the `Missing` sentinel value is a separate value vs `None`, allowing one to easily
+know if a value is truly just missing or is `None`/`Null`.
