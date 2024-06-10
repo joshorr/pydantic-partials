@@ -3,7 +3,7 @@ from typing import Any, get_args, get_origin, TypeVar
 
 from pydantic import BaseModel, model_serializer, JsonValue
 
-from .meta import _PartialMeta
+from .meta import PartialMeta
 from .sentinels import Missing, MissingType
 
 from logging import getLogger
@@ -23,18 +23,25 @@ class PartialModel(
 
     # Need metaclass to examine fields for missing type
     # and also to auto-add missing type if desired.
-    metaclass=_PartialMeta,
+    metaclass=PartialMeta,
 
     # Needed so `Missing` default values will be validated and therefore the `PydanticOmit` will be
     # raised and inform Pydantic to ignore/omit the field value.
     validate_default=True
 ):
-    """ Class Args:
-            auto_partial: For more details see `pydantic_partials.config.PartialConfigDict.auto_partial`.
-                If `Default`: Inherit behavior from parent/model_config; otherwise defaults to `True`.
-                If `True` (default): Will automatically make all fields on the model `Partial`.
-                If `False`: User needs to mark individual fields as `Partial` where they want.
     """
+    Class Args:
+
+    - auto_partial: For more details see `pydantic_partials.config.PartialConfigDict.auto_partials`.
+        - If `Default`: Inherit behavior from parent/model_config; otherwise defaults to `True`.
+        - If `True` (default): Will automatically make all fields on the model `Partial`.
+        - If `False`: User needs to mark individual fields as `Partial` where they want.
+    """
+
+    def __init__(self, *args, **kwargs):
+        """ Pydantic partial model class, with ability to easily dynamically omit fields when serializing a model.
+        """
+        super().__init__(*args, **kwargs)
 
     if not typing.TYPE_CHECKING:
 
