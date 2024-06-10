@@ -1,0 +1,6 @@
+name: test-local
+on: pull_request
+jobs:
+  reusable:
+    uses: joshorr/workflows/.github/workflows/py-test.yml@main
+    secrets: inherit

@@ -1,0 +1,11 @@
+on:
+  push:
+    branches:
+      - main
+name: Push Main
+jobs:
+  reusable:
+    uses: joshorr/workflows/.github/workflows/py-push-main.yml@main
+    with:
+      real-publish: true
+    secrets: inherit

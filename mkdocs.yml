@@ -1,12 +1,12 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
-site_name: Docs for pydantic-lazy
+site_name: Docs for pydantic-partials
 dev_addr: 127.0.0.1:7000
 
 nav:
   - xmodel:
     - index.md
-  - API Reference: api/xmodel/" target="_blank
+  - API Reference: api/pydantic_partials/" target="_blank
   - Changelog: changelog.md
 
 theme:

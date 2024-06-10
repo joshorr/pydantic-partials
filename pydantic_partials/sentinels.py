@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar, Annotated
+from typing import Any, Type, TypeVar
 
 from pydantic import GetCoreSchemaHandler
 from pydantic_core import core_schema, PydanticOmit
@@ -25,14 +25,22 @@ class MissingType(Sentinel):
 
     @staticmethod
     def _validate(value: Any, info: core_schema.ValidationInfo) -> 'MissingType':
+        # Tells Pydantic that our Sentinel value 'Missing' is our validated value.
+        # return Missing
+
         # Keeps the associated attribute 'deleted/omitted' from model.
+        #
         raise PydanticOmit()
 
     @staticmethod
     def _serialize(value: Any) -> 'MissingType':
         # Keeps the associated attribute 'deleted/omitted' from model.
+        # raise PydanticOmit()
+        # return 'a'
         return Missing
 
 
 Missing = MissingType()
+
+T = TypeVar('T')
 

@@ -8,10 +8,10 @@ from pydantic.fields import FieldInfo, Field
 from zoneinfo import ZoneInfo
 import datetime as dt
 
-from pydantic_lazy.lazy import LazyModel
+from pydantic_partials.partial import PartialModel, Partial
 
-from pydantic_lazy import PartialConfigDict
-from pydantic_lazy.missing import Missing, MissingType, Partial
+from pydantic_partials import PartialConfigDict
+from pydantic_partials.sentinels import Missing, MissingType
 
 
 # from pydantic_lazy.remote import RemoteModel
@@ -20,7 +20,7 @@ def utc() -> dt.datetime:
 
 
 def test_basic():
-    class TestModel(LazyModel):
+    class TestModel(PartialModel):
         a: int
         b: Annotated['int | str', 2]
         c: Decimal
@@ -54,18 +54,15 @@ def test_basic():
     assert a.model_dump_json() == f'{{"d":"{d_date.isoformat().replace("+00:00", "Z")}","a":2}}'
 
 
-
-
-
 def test_select_fields():
-    class TestModel(LazyModel, partial_auto=False, validate_assignment=True):
-        model_config = PartialConfigDict(partial_auto=True)
+    class TestModel(PartialModel, auto_partials=False, validate_assignment=True):
+        model_config = PartialConfigDict(auto_partials=True)
         a: Partial[int] = Missing
         b: Annotated['int | str', 2] | MissingType = Missing
         c: Decimal
         d: dt.datetime | MissingType = Missing
 
-    class TestModel2(TestModel, partial_auto=True):
+    class TestModel2(TestModel, auto_partials=True):
         e: Partial[str] = Missing
 
     a = TestModel(c='1.3')

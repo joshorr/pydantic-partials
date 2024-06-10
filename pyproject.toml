@@ -1,11 +1,12 @@
 [tool.poetry]
-name = "pydantic-dynamic"
+name = "pydantic-partials"
 version = "0.1.0"
-description = "Pydantic models that dynamically verify types when attributes are set."
+description = "Pydantic partial model class, with ability to easily dynamically omit fields when seralizing a model."
+
 authors = ["Josh Orr <josh@orr.blue>"]
-packages = [{include = "pydantic_lazy"}]
+packages = [{include = "pydantic_partials"}]
 readme = "README.md"
-repository = "https://github.com/joshorr/pydantic-dynamic"
+repository = "https://github.com/joshorr/pydantic-partials"
 classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "License :: OSI Approved :: The Unlicense (Unlicense)"
@@ -14,7 +15,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10"
 xsentinels = "^1.2.1"
-pydantic = "^2.5.2"
+pydantic = "^2.7.3"
 
 
 [tool.poetry.group.dev.dependencies]
