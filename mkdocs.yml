@@ -4,7 +4,7 @@ site_name: Docs for pydantic-partials
 dev_addr: 127.0.0.1:7000
 
 nav:
-  - xmodel:
+  - Getting Started:
     - index.md
   - API Reference: api/pydantic_partials/" target="_blank
   - Changelog: changelog.md
