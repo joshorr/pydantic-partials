@@ -32,7 +32,7 @@ from pydantic_partials import PartialModel, Missing, Partial
 
 class MyModel(PartialModel):
     some_attr: str
-
+    another_field: str
 
 # By default, Partial fields without any value will get set to a special `Missing` type.
 # Any field that is set to Missing is excluded from the model_dump/model_dump_json
@@ -53,6 +53,12 @@ assert obj.model_dump() == {}
 
 # The json dump is also affected in the same way.
 assert obj.model_dump_json() == '{}'
+
+# Any non-missing fields will be included when dumping/serializing model.
+obj.another_field = 'assigned-value'
+
+# And now it's removed from the model-dump.
+assert obj.model_dump() == {'another_field': 'assigned-value'}
 ```
 
 
