@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/joshorr/pydantic-partials/compare/v1.0.2...v1.0.3) (2024-06-10)
+
+
+### Documentation
+
+* clarified a point in readme/docs. ([6b9fbd0](https://github.com/joshorr/pydantic-partials/commit/6b9fbd0dc24257671fec3eb7124e53f551c6eb3b))
+* fix incorrect mkdocs metadata. ([fe6779b](https://github.com/joshorr/pydantic-partials/commit/fe6779b08b8a65e811201e7c0712745e705745f8))
+
 ## [1.0.2](https://github.com/joshorr/pydantic-partials/compare/v1.0.1...v1.0.2) (2024-06-10)
 
 
