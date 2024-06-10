@@ -15,7 +15,11 @@ from logging import getLogger
 
 
 # metaclass to make all fields in a model optional, useful for PATCH requests
-class _PartialMeta(ModelMetaclass):
+class PartialMeta(ModelMetaclass):
+    """ Metaclass of `pydantic_partials.partial.PartialModel`, used to support partial fields,
+        including the ability ot automatically apply `pydantic_partials.partial.Partial`[...] to fields
+        via `pydantic_partials.config.PartialConfigDict.auto_partials` configuration option.
+    """
     model_partial_fields: typing.ClassVar[set[str]]
     """ Set of strings representing field names that can be missing from validation/serialization.
         If they are missing, they will return the `Missing` sentinel value and the field will be entirely
@@ -53,7 +57,7 @@ class _PartialMeta(ModelMetaclass):
         """
 
         Args:
-            auto_partials: For more details see `pydantic_partials.config.PartialConfigDict.auto_partial`.
+            auto_partials: For more details see `pydantic_partials.config.PartialConfigDict.auto_partials`.
                 If `Default`: Inherit behavior from parent/model_config; otherwise defaults to `True`.
                 If `True` (default): Will automatically make all fields on the model `Partial`.
                 If `False`: User needs to mark individual fields as `Partial` where they want.

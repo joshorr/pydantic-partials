@@ -6,7 +6,10 @@ from xsentinels.sentinel import Sentinel
 
 
 class MissingType(Sentinel):
-    # See (https://docs.pydantic.dev/latest/concepts/json_schema/#modifying-the-schema).
+    """ Class/Type of `Missing`, a sentinel that is used to indicate if a field is missing its value
+        in a `pydantic_partials.partial.PartialModel` subclass.
+    """
+    # Notes/See (https://docs.pydantic.dev/latest/concepts/json_schema/#modifying-the-schema).
 
     @classmethod
     def __get_pydantic_core_schema__(
@@ -41,6 +44,8 @@ class MissingType(Sentinel):
 
 
 Missing = MissingType()
+""" Returned as attribute value when attribute value is missing. Can also be set on attribute to indicate it's missing.
+"""
 
 T = TypeVar('T')
 
