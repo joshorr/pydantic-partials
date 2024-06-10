@@ -1,4 +1,4 @@
-from typing import Any---
+---
 title: Getting Started
 ---
 ## Getting Started
