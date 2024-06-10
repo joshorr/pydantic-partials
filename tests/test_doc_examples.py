@@ -56,3 +56,29 @@ def test_doc_example__index__2():
     assert obj.partial_int is Missing
     assert obj.partial_str is Missing
     assert obj.required_decimal == Decimal('1.34')
+
+
+def test_doc_example__index__3():
+    from pydantic_partials import PartialModel, Missing
+    from pydantic import ValidationError, BaseModel
+
+    class TestModel(BaseModel):
+        name: str
+        value: str
+        some_null_by_default_field: str | None = None
+
+    try:
+        TestModel()
+    except ValidationError as e:
+        print(f'Pydantic will state `name` + `value` are required: {e}')
+    else:
+        raise Exception('Pydantic should have required `required_decimal`.')
+
+    class PartialTestModel(PartialModel, TestModel):
+        pass
+
+    obj = PartialTestModel(name='a-name')
+
+    assert obj.name == 'a-name'
+    assert obj.value is Missing
+    assert obj.some_null_by_default_field is None
