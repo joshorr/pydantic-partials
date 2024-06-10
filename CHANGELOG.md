@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/joshorr/pydantic-partials/compare/v1.0.0...v1.0.1) (2024-06-10)
+
+
+### Bug Fixes
+
+* generate docs issue. ([770cb7c](https://github.com/joshorr/pydantic-partials/commit/770cb7c0e5e8f3b2c6d82c479161b857296d9683))
+
 ## 1.0.0 (2024-06-10)
 
 
