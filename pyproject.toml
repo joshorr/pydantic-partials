@@ -39,7 +39,7 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.custom.xpublish]
-extra-module-docs = ['xsentinels', 'xloop', 'xinject', 'xurls']
+extra-module-docs = ['xsentinels']
 
 [tool.pytest.ini_options]
 minversion = "6.0"
