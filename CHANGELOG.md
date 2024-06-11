@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.5](https://github.com/joshorr/pydantic-partials/compare/v1.0.4...v1.0.5) (2024-06-11)
+
+
+### Documentation
+
+* clarifying readme/docs. ([d4d85ed](https://github.com/joshorr/pydantic-partials/commit/d4d85ed3af712319bfb782adabaf50b2e6f608e7))
+* fix extra indent in code example in README.md. ([1745485](https://github.com/joshorr/pydantic-partials/commit/1745485fa7e6bfb9b3c070ebccff1289285b05cf))
+
 ## [1.0.4](https://github.com/joshorr/pydantic-partials/compare/v1.0.3...v1.0.4) (2024-06-10)
 
 
@@ -48,4 +56,3 @@
 
 * added basic docs to readme. ([a0eb544](https://github.com/joshorr/pydantic-partials/commit/a0eb544554d8351df07586ee7bc8ad393c761164))
 * added/changed doc-comments. ([eb1eb7c](https://github.com/joshorr/pydantic-partials/commit/eb1eb7c507c1236a922d59a7dc7972f765615391))
-
