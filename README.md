@@ -93,42 +93,42 @@ This includes any inherited Pydantic fields (from a superclass).
 You can inherit from a model to make a partial-version of the inherited fields:
 
 ```python
-    from pydantic_partials import PartialModel, Missing
-    from pydantic import ValidationError, BaseModel
+from pydantic_partials import PartialModel, Missing
+from pydantic import ValidationError, BaseModel
 
-    class TestModel(BaseModel):
-        name: str
-        value: str
-        some_null_by_default_field: str | None = None
+class TestModel(BaseModel):
+    name: str
+    value: str
+    some_null_by_default_field: str | None = None
 
-    try:
-        # This should produce an error because
-        # `name` and `value`are required fields.
-        TestModel()
-    except ValidationError as e:
-        print(f'Pydantic will state `name` + `value` are required: {e}')
-    else:
-        raise Exception('Field `required_decimal` should be required.')
+try:
+    # This should produce an error because
+    # `name` and `value`are required fields.
+    TestModel()
+except ValidationError as e:
+    print(f'Pydantic will state `name` + `value` are required: {e}')
+else:
+    raise Exception('Field `required_decimal` should be required.')
 
-        # We inherit from `TestModel` and add `PartialModel` to the mix.
+    # We inherit from `TestModel` and add `PartialModel` to the mix.
 
-    class PartialTestModel(PartialModel, TestModel):
-        pass
+class PartialTestModel(PartialModel, TestModel):
+    pass
 
-    # `PartialTestModel` can now be allocated without the required fields.
-    # Any missing required fields will be marked with the `Missing` value
-    # and won't be serialized out.
-    obj = PartialTestModel(name='a-name')
+# `PartialTestModel` can now be allocated without the required fields.
+# Any missing required fields will be marked with the `Missing` value
+# and won't be serialized out.
+obj = PartialTestModel(name='a-name')
 
-    assert obj.name == 'a-name'
-    assert obj.value is Missing
-    assert obj.some_null_by_default_field is None
+assert obj.name == 'a-name'
+assert obj.value is Missing
+assert obj.some_null_by_default_field is None
 
-    # The `None` field value is still serialized out,
-    # only fields with a `Missing` value assigned are skipped.
-    assert obj.model_dump() == {
-        'name': 'a-name', 'some_null_by_default_field': None
-    }
+# The `None` field value is still serialized out,
+# only fields with a `Missing` value assigned are skipped.
+assert obj.model_dump() == {
+    'name': 'a-name', 'some_null_by_default_field': None
+}
 ```
 
 Notice that if a field has a default value, it's used instead of marking it as `Missing`.
