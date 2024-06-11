@@ -17,20 +17,15 @@
 
 ## [1.0.2](https://github.com/joshorr/pydantic-partials/compare/v1.0.1...v1.0.2) (2024-06-10)
 
-
-### Bug Fixes
-
-* readme. ([ed0766c](https://github.com/joshorr/pydantic-partials/commit/ed0766c1b03074e51a6772ce5ee078a288083309))
-
-
 ### Documentation
 
+* readme. ([ed0766c](https://github.com/joshorr/pydantic-partials/commit/ed0766c1b03074e51a6772ce5ee078a288083309))
 * unneeded reference in docs. ([6d78d07](https://github.com/joshorr/pydantic-partials/commit/6d78d07846b16635cd1817df871e6df98a286d03))
 
 ## [1.0.1](https://github.com/joshorr/pydantic-partials/compare/v1.0.0...v1.0.1) (2024-06-10)
 
 
-### Bug Fixes
+### Documentation
 
 * generate docs issue. ([770cb7c](https://github.com/joshorr/pydantic-partials/commit/770cb7c0e5e8f3b2c6d82c479161b857296d9683))
 
@@ -54,4 +49,3 @@
 * added basic docs to readme. ([a0eb544](https://github.com/joshorr/pydantic-partials/commit/a0eb544554d8351df07586ee7bc8ad393c761164))
 * added/changed doc-comments. ([eb1eb7c](https://github.com/joshorr/pydantic-partials/commit/eb1eb7c507c1236a922d59a7dc7972f765615391))
 
-## Changelog
