@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6](https://github.com/joshorr/pydantic-partials/compare/v1.0.5...v1.0.6) (2024-06-14)
+
+
+### Bug Fixes
+
+* require python &gt;=3.10, &lt;4 (from >=3.10,<3.11) ([2fb0959](https://github.com/joshorr/pydantic-partials/commit/2fb0959b0847da8aab67424dd674ddf41052e3a9))
+
 ## [1.0.5](https://github.com/joshorr/pydantic-partials/compare/v1.0.4...v1.0.5) (2024-06-11)
 
 
