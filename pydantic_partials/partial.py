@@ -32,7 +32,7 @@ class PartialModel(
     """
     Class Args:
 
-    - auto_partial: For more details see `pydantic_partials.config.PartialConfigDict.auto_partials`.
+    - auto_partials: For more details see `pydantic_partials.config.PartialConfigDict.auto_partials`.
         - If `Default`: Inherit behavior from parent/model_config; otherwise defaults to `True`.
         - If `True` (default): Will automatically make all fields on the model `Partial`.
         - If `False`: User needs to mark individual fields as `Partial` where they want.
