@@ -39,8 +39,15 @@ class MissingType(Sentinel):
     def _serialize(value: Any) -> 'MissingType':
         # Keeps the associated attribute 'deleted/omitted' from model.
         # raise PydanticOmit()
-        # return 'a'
-        return Missing
+
+        # Return same value we got, when requested to try and serialize real data it's not 'Missing',
+        # and if it is, that means `Value` is `Missing` and we are fine to return that also.
+        # I would love to rase a `raise PydanticOmit()` if `value` is `Missing`, but that does not currently work
+        # for Pydantic, so I just return the `Missing` unchanged for now.
+        # If there is a serialization error later on about how Pydantic can't turn `Missing` into a `Json`
+        # then we can debug the situation
+        # (right now PartialModel should delete any attributes that are set to `Missing` to work around this limitation)
+        return value
 
 
 Missing = MissingType()
