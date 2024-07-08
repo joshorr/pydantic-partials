@@ -95,6 +95,10 @@ class PartialMeta(ModelMetaclass):
                 raise ValueError(f'Invalid/Unknown `partial_auto` config value ({final_partial_auto}), use bool value.')
 
             for k, v in cls.model_fields.items():
+                if k in partial_fields:
+                    # The field is already a Partial
+                    continue
+
                 if v.default is PydanticUndefined and v.default_factory is None:
                     v.annotation = v.annotation | MissingType
                     partial_fields.add(k)
