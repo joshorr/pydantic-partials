@@ -28,12 +28,12 @@ class MissingType(Sentinel):
 
     @staticmethod
     def _validate(value: Any, info: core_schema.ValidationInfo) -> 'MissingType':
-        # Tells Pydantic that our Sentinel value 'Missing' is our validated value.
-        # return Missing
+        if value is Missing:
+            # Keeps the associated attribute 'deleted/omitted' from model.
+            raise PydanticOmit()
 
-        # Keeps the associated attribute 'deleted/omitted' from model.
-        #
-        raise PydanticOmit()
+        # `value` is not Missing, return it unchanged.
+        return value
 
     @staticmethod
     def _serialize(value: Any) -> 'MissingType':
