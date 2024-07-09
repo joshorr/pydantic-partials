@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.7](https://github.com/joshorr/pydantic-partials/compare/v1.0.6...v1.0.7) (2024-07-08)
+
+
+### Bug Fixes
+
+* we want to not change validated object to missing. ([9f754f7](https://github.com/joshorr/pydantic-partials/commit/9f754f753da1eae492fb289f5bce829a0186bb76))
+* when setting values, Pydantic would ask this to serialize them if the type was not exactly what it expected. ([90555bd](https://github.com/joshorr/pydantic-partials/commit/90555bd1c8e1fe44abef896ee91686e87edf8aeb))
+
 ## [1.0.6](https://github.com/joshorr/pydantic-partials/compare/v1.0.5...v1.0.6) (2024-06-14)
 
 
