@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.8](https://github.com/joshorr/pydantic-partials/compare/v1.0.7...v1.0.8) (2024-07-17)
+
+
+### Bug Fixes
+
+* ensure our validator only runs when the value type is `Missing`. ([07508c1](https://github.com/joshorr/pydantic-partials/commit/07508c1c134abda3fc82b4c177ca656197f5682d))
+
 ## [1.0.7](https://github.com/joshorr/pydantic-partials/compare/v1.0.6...v1.0.7) (2024-07-08)
 
 
