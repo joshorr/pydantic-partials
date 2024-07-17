@@ -13,17 +13,17 @@ class MissingType(Sentinel):
 
     @classmethod
     def __get_pydantic_core_schema__(
-        cls, source: Type[Any], handler: GetCoreSchemaHandler
+        cls, source_type: Type[Any], handler: GetCoreSchemaHandler
     ) -> core_schema.CoreSchema:
-        assert source is MissingType
+        assert source_type is MissingType
         # We never want to serialize any Missing values.
         return core_schema.with_info_after_validator_function(
             cls._validate,
-            core_schema.any_schema(),
-            serialization=core_schema.plain_serializer_function_ser_schema(
-                cls._serialize,
-                # return_schema=core_schema.AnySchema
-            )
+            core_schema.is_instance_schema(cls=MissingType),  # core_schema.any_schema(),
+            # serialization=core_schema.plain_serializer_function_ser_schema(
+            #     cls._serialize,
+            #     # return_schema=core_schema.AnySchema
+            # )
         )
 
     @staticmethod
@@ -32,7 +32,7 @@ class MissingType(Sentinel):
             # Keeps the associated attribute 'deleted/omitted' from model.
             raise PydanticOmit()
 
-        # `value` is not Missing, return it unchanged.
+        # If we somehow get a non-Missing value (should not happen), return it unchanged.
         return value
 
     @staticmethod
