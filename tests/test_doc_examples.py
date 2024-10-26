@@ -1,6 +1,5 @@
 
 
-
 def test_doc_example__index__1():
     from pydantic_partials import PartialModel, Missing
 
