@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/joshorr/pydantic-partials/compare/v1.0.8...v1.1.0) (2024-10-26)
+
+
+### Features
+
+* add way to exclude specific fields from auto partials. ([ceeb995](https://github.com/joshorr/pydantic-partials/commit/ceeb995d21ceb03447353272025f045f722dfbdf))
+
 ## [1.0.8](https://github.com/joshorr/pydantic-partials/compare/v1.0.7...v1.0.8) (2024-07-17)
 
 
