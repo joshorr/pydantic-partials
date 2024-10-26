@@ -11,8 +11,8 @@
 
 An easy way to add or create partials for Pydantic models.
 
-![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12&color=blue?style=flat-square&logo=python)
-![PyPI version](https://badge.fury.io/py/pydantic_partials.svg?)
+[![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12&color=blue?style=flat-square&logo=python)](https://pypi.org/project/pydantic-partials/)
+[![PyPI version](https://badge.fury.io/py/pydantic_partials.svg?)](https://pypi.org/project/pydantic-partials/)
 
 ## Documentation
 
