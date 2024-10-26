@@ -136,8 +136,61 @@ Notice that if a field has a default value, it's used instead of marking it as `
 Also, the `Missing` sentinel value is a separate value vs `None`, allowing one to easily
 know if a value is truly just missing or is `None`/`Null`.
 
+### Exclude Fields From Auto Partials
 
-### Automatic Partials Configuration
+You can exclude specific fields from the automatic partials via these means:
+
+- `AutoPartialExclude[...]`
+  - This puts a special `Annotated` item on field to mark it as excluded.
+- `class PartialRequired(PartialModel, auto_partials_exclude={'id', 'created_at'}):`
+  - This way provides them via class argument `auto_partials_exclude`
+- Or via the standard `model_config`
+  - `model_config = {'auto_partials_exclude': {'id', 'created_at'}}`
+  - A dict, using `auto_partials_exclude` as the key and a set of field names as the value.
+
+Any of these methods are inheritable.
+You can override an excluded value by explicitly marking a field as Partial via `some_field: Partial[str]`
+
+Here is an example using the `AutoPartialExclude` method, also showing how it can inherit.
+
+```python
+from pydantic_partials import PartialModel, AutoPartialExclude, Missing
+from pydantic import BaseModel, ValidationError
+from datetime import datetime
+import pytest
+
+class PartialRequired(PartialModel):
+    id: AutoPartialExclude[str]
+    created_at: AutoPartialExclude[datetime]
+
+class TestModel(BaseModel):
+    id: str
+    created_at: datetime
+    name: str
+    value: str
+    some_null_by_default_field: str | None = None
+
+class PartialTestModel(TestModel, PartialRequired):
+    pass
+
+# Will raise validation error for the two fields excluded from auto-partials
+with pytest.raises(
+    ValidationError,
+    match=r'2 validation errors[\w\W]*'
+          r'id[\w\W]*Field required[\w\W]*'
+          r'created_at[\w\W]*Field required'
+):
+    PartialTestModel()
+
+# If we give them values, we get no ValidationError
+obj = PartialTestModel(id='some-value', created_at=datetime.now())
+
+# And fields have the expected values.
+assert obj.id == 'some-value'
+assert obj.name is Missing
+```
+
+### Auto Partials Configuration
 
 You can turn off automatically applying partials to all non-defaulted fields
 via `auto_partials` class argument or modeL_config option:

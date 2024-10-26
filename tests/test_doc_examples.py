@@ -1,5 +1,6 @@
 
 
+
 def test_doc_example__index__1():
     from pydantic_partials import PartialModel, Missing
 
@@ -103,3 +104,40 @@ def test_doc_example__index__3():
     assert obj.model_dump() == {
         'name': 'a-name', 'some_null_by_default_field': None
     }
+
+
+def test_doc_example__auto_exclude__index__4():
+    from pydantic_partials import PartialModel, AutoPartialExclude, Missing
+    from pydantic import BaseModel, ValidationError
+    from datetime import datetime
+    import pytest
+
+    class PartialRequired(PartialModel):
+        id: AutoPartialExclude[str]
+        created_at: AutoPartialExclude[datetime]
+
+    class TestModel(BaseModel):
+        id: str
+        created_at: datetime
+        name: str
+        value: str
+        some_null_by_default_field: str | None = None
+
+    class PartialTestModel(TestModel, PartialRequired):
+        pass
+
+    # Will raise validation error for the two fields excluded from auto-partials
+    with pytest.raises(
+        ValidationError,
+        match=r'2 validation errors[\w\W]*'
+              r'id[\w\W]*Field required[\w\W]*'
+              r'created_at[\w\W]*Field required'
+    ):
+        PartialTestModel()
+
+    # If we give them values, we get no ValidationError
+    obj = PartialTestModel(id='some-value', created_at=datetime.now())
+
+    # And fields have the expected values.
+    assert obj.id == 'some-value'
+    assert obj.name is Missing

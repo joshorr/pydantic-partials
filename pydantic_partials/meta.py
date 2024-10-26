@@ -1,5 +1,5 @@
 import typing
-from typing import Any, get_args, get_origin, TypeVar
+from typing import Any, get_args, get_origin, TypeVar, Iterable
 
 from pydantic import BaseModel
 
@@ -9,7 +9,7 @@ from xsentinels import Default
 from xsentinels.default import DefaultType
 
 from .config import PartialConfigDict
-from .sentinels import Missing, MissingType
+from .sentinels import Missing, MissingType, AutoPartialExcludeMarker
 
 from logging import getLogger
 
@@ -46,6 +46,7 @@ class PartialMeta(ModelMetaclass):
             *,
 
             auto_partials: bool | DefaultType = Default,
+            auto_partials_exclude: Iterable[str] | DefaultType = Default,
 
             # A private/internal detail for generic base subclasses that want to also change the fields,
             # this prevents having to rebuild the class a second time; if this is True then the subclass
@@ -62,6 +63,13 @@ class PartialMeta(ModelMetaclass):
                 If `True` (default): Will automatically make all fields on the model `Partial`.
                 If `False`: User needs to mark individual fields as `Partial` where they want.
 
+            auto_partials_exclude: A set of strings of field names to exclude from automatic partials.
+                If you explicitly mark a field as a Partial, this won't effect that. THis only effects
+                automatically applied partial fields.
+
+                You can also use `pydantic_partials.partial.AutoPartialExclude` to more easily mark fields as excluded.
+                For more details see `pydantic_partials.config.PartialConfigDict.auto_partials_exclude`.
+
             **kwargs: Passed along other class arguments to Pydantic and any __init_subclass__ methods.
         """
         # Create the class first...
@@ -74,18 +82,40 @@ class PartialMeta(ModelMetaclass):
         if auto_partials is not Default:
             cls.model_config['auto_partials'] = auto_partials
 
+        if auto_partials_exclude:
+            cls.model_config['auto_partials_exclude'] = set(auto_partials_exclude)
+
+        final_auto_exclude = cls.model_config.get('auto_partials_exclude', set())
+        for c in cls.__mro__:
+            parent_config = getattr(c, 'model_config', set())
+            if not parent_config:
+                continue
+
+            final_auto_exclude.update(parent_config.get('auto_partials_exclude', set()))
+
         need_rebuild = False
 
         partial_fields = set()
         for k, v in cls.model_fields.items():
             field_type = v.annotation
-            if get_origin(field_type) is None:
+            origin = get_origin(field_type)
+            if origin is None:
                 if field_type is MissingType:
                     partial_fields.add(k)
 
+            # TODO: Check that `field_type` is a union?
             for arg_type in get_args(field_type):
                 if arg_type is MissingType:
                     partial_fields.add(k)
+
+            for mdv in v.metadata:
+                # If we find the marker AND we are not already marked as a partial_field,
+                # add field to auto-exclude list.
+                if mdv is AutoPartialExcludeMarker and k not in partial_fields:
+                    final_auto_exclude.add(k)
+
+        if final_auto_exclude:
+            cls.model_config['auto_partials_exclude'] = final_auto_exclude
 
         final_partial_auto = cls.model_config.get('auto_partials', True)
         if final_partial_auto is not False:
@@ -97,6 +127,10 @@ class PartialMeta(ModelMetaclass):
             for k, v in cls.model_fields.items():
                 if k in partial_fields:
                     # The field is already a Partial
+                    continue
+
+                if k in final_auto_exclude:
+                    # The field is excluded.
                     continue
 
                 if v.default is PydanticUndefined and v.default_factory is None:

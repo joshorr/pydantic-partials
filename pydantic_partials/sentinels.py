@@ -1,4 +1,4 @@
-from typing import Any, Type, TypeVar
+from typing import Any, Type, TypeVar, Annotated
 
 from pydantic import GetCoreSchemaHandler
 from pydantic_core import core_schema, PydanticOmit
@@ -54,5 +54,12 @@ Missing = MissingType()
 """ Returned as attribute value when attribute value is missing. Can also be set on attribute to indicate it's missing.
 """
 
-T = TypeVar('T')
 
+class AutoPartialExcludeMarkerType(Sentinel):
+    pass
+
+
+AutoPartialExcludeMarker = AutoPartialExcludeMarkerType()
+""" Used by `pydantic_partials.partial.AutoPartialExclude` to mark a field as excluded from automatic partials.
+    See `pydantic_partials.config.PartialConfigDict.auto_partials_exclude` for more details.
+"""
