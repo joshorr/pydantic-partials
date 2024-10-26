@@ -1,10 +1,10 @@
 import typing
-from typing import Any, get_args, get_origin, TypeVar
+from typing import Any, get_args, get_origin, TypeVar, Annotated
 
 from pydantic import BaseModel, model_serializer, JsonValue
 
 from .meta import PartialMeta
-from .sentinels import Missing, MissingType
+from .sentinels import Missing, MissingType, AutoPartialExcludeMarker
 
 from logging import getLogger
 
@@ -16,6 +16,9 @@ Partial = PM | MissingType
 """ Can be used to manually mark a variable as Partial, which means it can have a `Missing`
     assigned to it. 
 """
+
+PME = TypeVar('PME')
+AutoPartialExclude = Annotated[PME, AutoPartialExcludeMarker]
 
 
 class PartialModel(
