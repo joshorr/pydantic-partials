@@ -5,7 +5,8 @@
         + [Introduction](#introduction)
         + [Basic Example](#basic-example)
         + [Inheritable](#inheritable)
-        + [Automatic Partials Configuration](#automatic-partials-configuration)
+        + [Exclude Fields From Auto Partials](#exclude-fields-from-auto-partials)
+        + [Auto Partials Configuration](#auto-partials-configuration)
 
 # Pydantic Partials
 
