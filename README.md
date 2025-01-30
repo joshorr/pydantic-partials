@@ -12,7 +12,7 @@
 
 An easy way to add or create partials for Pydantic models.
 
-[![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12&color=blue?style=flat-square&logo=python)](https://pypi.org/project/pydantic-partials/)
+[![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12|%203.13&color=blue?style=flat-square&logo=python)](https://pypi.org/project/pydantic-partials/)
 [![PyPI version](https://badge.fury.io/py/pydantic_partials.svg?)](https://pypi.org/project/pydantic-partials/)
 
 ## Documentation
@@ -21,7 +21,7 @@ An easy way to add or create partials for Pydantic models.
 
 [//]: # (--8<-- [start:readme])
 
-## Important Upgrade from v1.x Notes
+## Important Upgrade from v1.x to 2.x Notes
 
 I decided to make the default behavior of `PartialModel` not be automatic anymore.
 
