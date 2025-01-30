@@ -4,7 +4,7 @@ from pydantic import ConfigDict
 from xsentinels.default import DefaultType, Default
 
 
-class PartialConfigDict(ConfigDict):
+class PartialConfigDict(ConfigDict, total=False):
     auto_partials: bool
     """
     Defaults to `True`.

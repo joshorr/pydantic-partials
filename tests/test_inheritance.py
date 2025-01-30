@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from pydantic_partials import PartialModel, Missing
+from pydantic_partials import Missing, AutoPartialModel
 from pydantic import ValidationError, BaseModel
 
 from pydantic_partials.partial import AutoPartialExclude
@@ -14,19 +14,19 @@ def test_doc_example__index__3():
         value: str
         some_null_by_default_field: str | None = None
 
-    class PartialTestModel(PartialModel, TestModel):
+    class PartialTestModel(AutoPartialModel, TestModel):
         pass
 
     try:
         # This should produce an error because
         # `name` and `value`are required fields.
-        TestModel()
+        TestModel()  # type: ignore
     except ValidationError as e:
         print(f'Pydantic will state `name` + `value` are required: {e}')
     else:
         raise Exception('Pydantic should have required `required_decimal`.')
 
-        # We inherit from `TestModel` and add `PartialModel` to the mix.
+        # We inherit from `TestModel` and add `AutoPartialModel` to the mix.
 
     # `PartialTestModel` can now be allocated without the required fields.
     # Any missing required fields will be marked with the `Missing` value
@@ -50,7 +50,7 @@ def test_auto_excluded_inheritance_1():
         value: str
         some_null_by_default_field: str | None = None
 
-    class PartialTestModel(PartialModel, TestModel):
+    class PartialTestModel(AutoPartialModel, TestModel):
         value: AutoPartialExclude[str]
 
     with pytest.raises(ValidationError, match=r'1 validation error.*\n *value *\n +Field required') as e_info:
@@ -69,7 +69,7 @@ def test_auto_excluded_inheritance_w_sibling():
         value: str
         some_null_by_default_field: str | None = None
 
-    class PartialTestModel(PartialModel, TestModel):
+    class PartialTestModel(AutoPartialModel, TestModel):
         pass
 
     with pytest.raises(
@@ -84,7 +84,7 @@ def test_auto_excluded_inheritance_w_sibling():
 
 
 def test_auto_excluded_inheritance_w_sibling_2():
-    class PartialRequired(PartialModel, auto_partials_exclude={'id', 'created_at'}):
+    class PartialRequired(AutoPartialModel, auto_partials_exclude={'id', 'created_at'}):
         id: str
         created_at: datetime
 
