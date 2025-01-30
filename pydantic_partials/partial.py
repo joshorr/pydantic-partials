@@ -1,8 +1,9 @@
 import typing
-from typing import Any, get_args, get_origin, TypeVar, Annotated
+from typing import Any, TypeVar, Annotated, TypeAlias
 
-from pydantic import BaseModel, model_serializer, JsonValue
+from pydantic import BaseModel
 
+from .config import PartialConfigDict
 from .meta import PartialMeta
 from .sentinels import Missing, MissingType, AutoPartialExcludeMarker
 
@@ -12,7 +13,7 @@ log = getLogger(__name__)
 
 
 PM = TypeVar('PM')
-Partial = PM | MissingType
+Partial: TypeAlias = PM | MissingType
 """ Can be used to manually mark a variable as Partial, which means it can have a `Missing`
     assigned to it. 
 """
@@ -40,6 +41,8 @@ class PartialModel(
         - If `True` (default): Will automatically make all fields on the model `Partial`.
         - If `False`: User needs to mark individual fields as `Partial` where they want.
     """
+
+    config_dict: typing.ClassVar[PartialConfigDict]
 
     def __init__(self, *args, **kwargs):
         """ Pydantic partial model class, with ability to easily dynamically omit fields when serializing a model.
@@ -79,3 +82,7 @@ class PartialModel(
                     pass
             else:
                 super().__setattr__(key, value)
+
+
+class AutoPartialModel(PartialModel, auto_partials=True):
+    pass

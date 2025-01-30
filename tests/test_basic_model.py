@@ -8,7 +8,7 @@ from pydantic.fields import FieldInfo, Field
 from zoneinfo import ZoneInfo
 import datetime as dt
 
-from pydantic_partials.partial import PartialModel, Partial
+from pydantic_partials.partial import PartialModel, Partial, AutoPartialModel
 
 from pydantic_partials import PartialConfigDict
 from pydantic_partials.sentinels import Missing, MissingType
@@ -20,7 +20,7 @@ def utc() -> dt.datetime:
 
 
 def test_basic():
-    class TestModel(PartialModel):
+    class TestModel(AutoPartialModel):
         a: int
         b: Annotated['int | str', 2]
         c: Decimal
@@ -55,12 +55,18 @@ def test_basic():
 
 
 def test_select_fields():
-    class TestModel(PartialModel, auto_partials=False, validate_assignment=True):
-        model_config = PartialConfigDict(auto_partials=True)
+    class TestModel(PartialModel, validate_assignment=True):
         a: Partial[int] = Missing
         b: Annotated['int | str', 2] | MissingType = Missing
         c: Decimal
         d: dt.datetime | MissingType = Missing
+
+    class TestModelAutoViaConfig(TestModel):
+        model_config = PartialConfigDict(auto_partials=True)
+
+    a2 = TestModelAutoViaConfig()
+    # Field `c` is a partial field via `auto_partials`, so this should work fine.
+    a2.c = Missing
 
     class TestModel2(TestModel, auto_partials=True):
         e: Partial[str] = Missing
