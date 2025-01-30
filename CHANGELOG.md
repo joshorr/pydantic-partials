@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/joshorr/pydantic-partials/compare/v1.1.0...v2.0.0) (2025-01-30)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support mypy + make `PartialModel` not auto-define partial fields, use `AutoPartialModel` instead if you want the old behavior.
+
+### Features
+
+* Support mypy + make `PartialModel` not auto-define partial fields, use `AutoPartialModel` instead if you want the old behavior. ([b6b669e](https://github.com/joshorr/pydantic-partials/commit/b6b669ee7159a28198d21ad7a3f54ee5ff521f52))
+
+
+### Documentation
+
+* adjust docs supported python version and make upgrade title more clear. ([2c39761](https://github.com/joshorr/pydantic-partials/commit/2c39761c449c67a8144c5e516302b316c6ef0ea6))
+
 ## [1.1.0](https://github.com/joshorr/pydantic-partials/compare/v1.0.8...v1.1.0) (2024-10-26)
 
 
