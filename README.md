@@ -7,6 +7,7 @@
         + [Two Partial Base Class Options](#two-partial-base-class-options)
         + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
         + [Automatically Defined Partials - Basic Example](#automatically-defined-partials---basic-example)
+    * [More Details](#more-details)
         + [Inheritable](#inheritable)
         + [Exclude Fields from Automatic Partials (AutoPartialModel)](#exclude-fields-from-automatic-partials-autopartialmodel)
         + [Auto Partials Configuration](#auto-partials-configuration)
@@ -156,6 +157,7 @@ By default, all fields without a default value will have the ability to be parti
 and can be missing from both validation and serialization.
 This includes any inherited Pydantic fields (from a superclass).
 
+## More Details
 
 ### Inheritable
 
