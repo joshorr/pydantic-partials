@@ -108,7 +108,7 @@ try:
     # `some_field` is a required field.
     MyModel()
 except ValidationError as e:
-    print(f'Pydantic will state `some_field` + `value` are required: {e}')
+    print(f'Pydantic will state `some_field` is required: {e}')
 else:
     raise Exception('Pydantic should have required `some_field`.')
 ```
