@@ -1,11 +1,14 @@
 - [Pydantic Partials](#pydantic-partials)
     * [Documentation](#documentation)
+    * [Important Upgrade from v1.x to 2.x Notes](#important-upgrade-from-v1x-to-2x-notes)
     * [Quick Start](#quick-start)
         + [Install](#install)
         + [Introduction](#introduction)
-        + [Basic Example](#basic-example)
+        + [Two Partial Base Class Options](#two-partial-base-class-options)
+        + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
+        + [Automatically Defined Partials - Basic Example](#automatically-defined-partials---basic-example)
         + [Inheritable](#inheritable)
-        + [Exclude Fields From Auto Partials](#exclude-fields-from-auto-partials)
+        + [Exclude Fields from Automatic Partials (AutoPartialModel)](#exclude-fields-from-automatic-partials-autopartialmodel)
         + [Auto Partials Configuration](#auto-partials-configuration)
 
 # Pydantic Partials
