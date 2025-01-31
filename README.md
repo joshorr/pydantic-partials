@@ -8,6 +8,7 @@
         + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
         + [Automatically Defined Partials - Basic Example](#automatically-defined-partials---basic-example)
     * [More Details](#more-details)
+        + [Missing](#missing)
         + [Inheritable](#inheritable)
         + [Exclude Fields from Automatic Partials (AutoPartialModel)](#exclude-fields-from-automatic-partials-autopartialmodel)
         + [Auto Partials Configuration](#auto-partials-configuration)
@@ -158,6 +159,13 @@ and can be missing from both validation and serialization.
 This includes any inherited Pydantic fields (from a superclass).
 
 ## More Details
+
+### Missing
+
+The `Missing` value is a sentinel, and there is never more than one instance of it. So you can use the `is` operator with it,
+just like you would with `None`.  It's of type `MissingType`.
+
+When evaluated as a bool, `Missing` is always `False`; just like how `None` evaluates to `False`.
 
 ### Inheritable
 
