@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/joshorr/pydantic-partials/compare/v2.0.1...v2.0.2) (2025-01-31)
+
+
+### Documentation
+
+* add info about how `Missing` is always `False`-like, etc. ([8d8d0d0](https://github.com/joshorr/pydantic-partials/commit/8d8d0d067c40f3632870759b5a75c0706a94c88a))
+
 ## [2.0.1](https://github.com/joshorr/pydantic-partials/compare/v2.0.0...v2.0.1) (2025-01-31)
 
 
