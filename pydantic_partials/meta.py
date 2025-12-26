@@ -64,8 +64,11 @@ class PartialMeta(ModelMetaclass):
         Args:
             auto_partials: For more details see `pydantic_partials.config.PartialConfigDict.auto_partials`.
                 If `Default`: Inherit behavior from parent/model_config; otherwise defaults to `False`.
-                If `True`: Will automatically make all fields on the model `Partial`.
-                If `False` (default): User needs to mark individual fields as `Partial` where they want.
+                If `True` (default): Will automatically make all fields on the model as `Partial`.
+                If `False`: User needs to mark individual fields as `Missing` or `Partial`.
+
+                Even if this is `False`, we will still go though and set any fields without a default value
+                to `Missing` if they have `Missing` or `Partial` in their type-hint/annotation.
 
             auto_partials_exclude: If `auto_partials` is True, or you inherit from `AutoPartialModel`
                 (which simply has `auto_partials` set to `True` by default for you) then this field will be consulted.
