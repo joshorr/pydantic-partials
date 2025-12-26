@@ -51,7 +51,7 @@ def test_basic():
     a.a = 2
 
     assert a.model_dump() == {'a': 2, 'd': d_date}
-    assert a.model_dump_json() == f'{{"d":"{d_date.isoformat().replace("+00:00", "Z")}","a":2}}'
+    assert a.model_dump_json() == f'{{"a":2,"d":"{d_date.isoformat().replace("+00:00", "Z")}"}}'
 
 
 def test_select_fields():
@@ -107,3 +107,13 @@ def test_select_fields():
         'd': d_date.isoformat().replace("+00:00", "Z"),
         'c': '1.3'
     }
+
+
+def test_explicitly_defined():
+    class TestModel(PartialModel):
+        attr_1: str
+        attr_2: Partial[str] = Missing
+
+    obj = TestModel(attr_1='value-1')
+    out = obj.model_dump_json()
+

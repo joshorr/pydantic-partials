@@ -1,21 +1,42 @@
+from pydantic import BaseModel
+
 - [Pydantic Partials](#pydantic-partials)
     * [Documentation](#documentation)
-    * [Important Upgrade from v1.x to 2.x Notes](#important-upgrade-from-v1x-to-2x-notes)
+    * [Important Upgrade from v2.x to 3.x Notes](#important-upgrade-from-v2x-to-3x-notes)
     * [Quick Start](#quick-start)
         + [Install](#install)
         + [Introduction](#introduction)
         + [Two Partial Base Class Options](#two-partial-base-class-options)
-        + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
         + [Automatically Defined Partials - Basic Example](#automatically-defined-partials---basic-example)
     * [More Details](#more-details)
         + [Missing](#missing)
         + [Inheritable](#inheritable)
         + [Exclude Fields from Automatic Partials (AutoPartialModel)](#exclude-fields-from-automatic-partials-autopartialmodel)
         + [Auto Partials Configuration](#auto-partials-configuration)
+        + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
+    * [Examples](#examples)
+    * [Important Upgrade from v1.x to 2.x Notes](#important-upgrade-from-v1x-to-2x-notes
 
 # Pydantic Partials
 
-An easy way to add or create partials for Pydantic models.
+Adds extra features using the new built-in `MISSING` feature from Pydantic.
+
+- An easy way to add or create automatically make all fields on a model partial-fields.
+  - For a Pydantic model via it's new `MISSING` feature.
+  - Makes all fields on a subclass automatically have the `MISSING` type annotation on them.
+  - All required fields (ie: no default value ) will have their default value set to `MISSING`.
+    - Makes all fields not required.
+- Optional patch to `MISSING` to make it falsy
+  - You have to enable this explicitly, it's opt-in.
+
+This can be handy when you want to take an existing class that has required fields and make them all not required.
+
+You can subclass the model and the subclass can automatically make all of it's required fields
+(ie: fields that don't have a default value), instead default them to `MISSING`.
+
+This makes it so all fields are not required anymore, and you can use this subclass in (for example)
+an API endpoint that you want PATCH-like behavior
+(where you can individually update specific fields on already existing model data).
 
 [![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12|%203.13&color=blue?style=flat-square&logo=python)](https://pypi.org/project/pydantic-partials/)
 
@@ -25,14 +46,28 @@ An easy way to add or create partials for Pydantic models.
 
 [//]: # (--8<-- [start:readme])
 
-## Important Upgrade from v1.x to 2.x Notes
+## Important Upgrade from v2.x to 3.x Notes
 
-I decided to make the default behavior of `PartialModel` not be automatic anymore.
+Switched to using the built-in MISSING value from Pydantic.
+`3.x` is fully backwards compatible with `2.x` except that `Mising` is now truthy (where it previously was falsy).
 
-I made a new class named `AutoPartialModel` that works exactly the same as the old v1.x `PartialModel` previously did.
+That means the `Missing` value is exactly the same as Pydantic's `MISSING` value.
+I kept the old name in place for backwards compatability, and for anyone who likes that capitalization better.
 
-To upgrade, simply replace `PartialModel` with `AutoPartialModel`, and things will work exactly as they did before.
-The `auto_partials` configuration option is still present and if present will still override the base-class setting.
+However, I have an option you can enable that can make it truly 100% backwards compatbile/non-breaking:
+
+If you call the `patch_missing_to_make_falsy` function it will patch `MISSING` to be falsy,
+and therefore `Missing` is falsey (`MISSING` and `Missing` are both the same exact value), like this:
+
+```python
+from pydantic_partials import patch_missing_to_make_falsy
+
+patch_missing_to_make_falsy()
+```
+
+You may want `MISSING` to be falsey even if you don't need the backwards compatability.
+
+Since the patching is to a global type `MISSING`, it's opt-in only via `patch_missing_to_make_falsy` and not automatically applied.
 
 ## Quick Start
 
@@ -65,54 +100,7 @@ There are two options to inherit from:
   - This automatically applies partial behavior to every attribute that does not already have a default value.
 
 
-Let's first look at a basic example.
-
-### Explicitly Defined Partials - Basic Example
-
-Very basic example of a simple model with explicitly defined partial fields, follows:
-
-```python
-from pydantic_partials import PartialModel, Missing, Partial, MissingType
-from pydantic import ValidationError
-
-class MyModel(PartialModel):
-    some_field: str
-    partial_field: Partial[str] = Missing
-    
-    # Alternate Syntax:
-    alternate_syntax_partial_field: str | MissingType = Missing
-    
-
-# By default, `Partial` fields without any value will get set to a
-# special `Missing` type. Any field that is set to Missing is
-# excluded from the model_dump/model_dump_json.
-obj = MyModel(some_field='a-value')
-assert obj.partial_field is Missing
-assert obj.model_dump() == {'some_field': 'a-value'}
-
-# You can set the real value at any time, and it will behave like expected.
-obj.partial_field = 'hello'
-assert obj.partial_field == 'hello'
-assert obj.model_dump() == {'some_field': 'a-value', 'partial_field': 'hello'}
-
-# You can always manually set a field to `Missing` directly.
-obj.partial_field = Missing
-
-# And now it's removed from the model-dump.
-assert obj.model_dump() == {'some_field': 'a-value'}
-
-# The json dump is also affected in the same way.
-assert obj.model_dump_json() == '{"some_field":"a-value"}'
-
-try:
-    # This should produce an error because
-    # `some_field` is a required field.
-    MyModel()
-except ValidationError as e:
-    print(f'Pydantic will state `some_field` is required: {e}')
-else:
-    raise Exception('Pydantic should have required `some_field`.')
-```
+Let's first look at a basic automatically defined partials example.
 
 ### Automatically Defined Partials - Basic Example
 
@@ -324,6 +312,85 @@ assert obj.partial_str is Missing
 
 assert obj.required_decimal == Decimal('1.34')
 ```
+
+### Explicitly Defined Partials - Basic Example
+
+Pydantic now supports the basic non-automatic style out of the box via `MISSING`, ie: 
+
+```python
+from pydantic import BaseModel
+from pydantic_core import MISSING
+
+class MyModel(BaseModel):
+    some_field: str
+    partial_field: str | MISSING = MISSING
+    
+```
+
+Previous to Pydantic v3.12, it had no `MISSING` feature and so the explicitly defeined partials
+was the way to do it.
+
+I've left it in for two reasons:
+
+1. Backwards compatability.
+2. It will still for any required (ie: no default value define) set the fields default value of any `MISSING` typed-fields to the `MISSING` value.
+    - This aspect is still might come in handy, depending on the situation.
+
+## Examples
+
+Very basic example of a simple model with explicitly defined partial fields, follows:
+
+```python
+from pydantic_partials import PartialModel, Missing, Partial, MissingType
+from pydantic import ValidationError
+
+class MyModel(PartialModel):
+    some_field: str
+    partial_field: Partial[str] = Missing
+    
+    # Alternate Syntax:
+    alternate_syntax_partial_field: str | MissingType = Missing
+    
+
+# By default, `Partial` fields without any value will get set to a
+# special `Missing` type. Any field that is set to Missing is
+# excluded from the model_dump/model_dump_json.
+obj = MyModel(some_field='a-value')
+assert obj.partial_field is Missing
+assert obj.model_dump() == {'some_field': 'a-value'}
+
+# You can set the real value at any time, and it will behave like expected.
+obj.partial_field = 'hello'
+assert obj.partial_field == 'hello'
+assert obj.model_dump() == {'some_field': 'a-value', 'partial_field': 'hello'}
+
+# You can always manually set a field to `Missing` directly.
+obj.partial_field = Missing
+
+# And now it's removed from the model-dump.
+assert obj.model_dump() == {'some_field': 'a-value'}
+
+# The json dump is also affected in the same way.
+assert obj.model_dump_json() == '{"some_field":"a-value"}'
+
+try:
+    # This should produce an error because
+    # `some_field` is a required field.
+    MyModel()
+except ValidationError as e:
+    print(f'Pydantic will state `some_field` is required: {e}')
+else:
+    raise Exception('Pydantic should have required `some_field`.')
+```
+
+## Important Upgrade from v1.x to 2.x Notes
+
+I decided to make the default behavior of `PartialModel` not be automatic anymore.
+
+I made a new class named `AutoPartialModel` that works exactly the same as the old v1.x `PartialModel` previously did.
+
+To upgrade, simply replace `PartialModel` with `AutoPartialModel`, and things will work exactly as they did before.
+The `auto_partials` configuration option is still present and if present will still override the base-class setting.
 
 
 [//]: # (--8<-- [end:readme])
