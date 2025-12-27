@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pydantic-partials"
-version = "2.0.2"
+version = "3.0.0"
 description = "Pydantic partial model class, with ability to easily dynamically omit fields when serializing a model."
 
 authors = ["Josh Orr <josh@orr.blue>"]
