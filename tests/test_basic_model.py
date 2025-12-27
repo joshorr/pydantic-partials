@@ -1,11 +1,9 @@
 from decimal import Decimal
-from typing import Union, Annotated
+from typing import Annotated
 import json
 
 import pytest
-from pydantic import model_validator, field_validator, ValidationError, ConfigDict
-from pydantic.fields import FieldInfo, Field
-from zoneinfo import ZoneInfo
+from pydantic import ValidationError, computed_field
 import datetime as dt
 
 from pydantic_partials.partial import PartialModel, Partial, AutoPartialModel
@@ -117,3 +115,20 @@ def test_explicitly_defined():
     obj = TestModel(attr_1='value-1')
     out = obj.model_dump_json()
 
+
+def test_computed_fields_excluded_when_missing():
+    class TestModel(AutoPartialModel):
+        some_fields_value: str
+
+        @computed_field
+        def some_field(self) -> str:
+            return self.some_fields_value
+
+    # Object should be able to be created without the `some_fields_value` due to `AutoPartialModel`.
+    obj = TestModel()
+    obj.some_fields_value is Missing
+    obj.some_field is Missing
+
+    assert obj.model_dump() == {}
+    obj.some_fields_value = 'str-value'
+    assert obj.model_dump() == {'some_fields_value': 'str-value', 'some_field': 'str-value'}
