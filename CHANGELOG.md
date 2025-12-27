@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/joshorr/pydantic-partials/compare/v2.0.2...v3.0.0) (2025-12-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support new Pydantic missing sentinel.
+
+### Features
+
+* Support new Pydantic missing sentinel. ([1436c89](https://github.com/joshorr/pydantic-partials/commit/1436c89cbfa46f8466d306bf62adb060fb31ffe8))
+
 ## [2.0.2](https://github.com/joshorr/pydantic-partials/compare/v2.0.1...v2.0.2) (2025-01-31)
 
 
