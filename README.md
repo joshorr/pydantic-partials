@@ -61,14 +61,6 @@ However, I have an option you can enable that can make it truly 100% backwards c
 If you call the `patch_missing_to_make_falsy` function it will patch `MISSING` to be falsy,
 and therefore `Missing` is falsey (`MISSING` and `Missing` are both the same exact value), like this:
 
-### mypy implications 
-
-mypy current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
-
-I went the route of using `MISSING` orginally because it made some edge cases (such as computed_fields) work with partial/missing values. Also, because it vastly simplified the implmentation.
-
-I am considering revamping the code again and using the new `exclude_if` feature from Pydantic, which may let me fix these other edge cases I was orginally going for while still simplifiying the implentation and allowing mypy to work better with the partials feature. For more details see this [issue](https://github.com/joshorr/pydantic-partials/issues/42).
-
 
 ```python
 from pydantic_partials import patch_missing_to_make_falsy
@@ -79,6 +71,17 @@ patch_missing_to_make_falsy()
 You may want `MISSING` to be falsey even if you don't need the backwards compatability.
 
 Since the patching is to a global type `MISSING`, it's opt-in only via `patch_missing_to_make_falsy` and not automatically applied.
+
+
+### mypy implications 
+
+mypy current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
+
+I went the route of using `MISSING` orginally because it made some edge cases (such as computed_fields) work with partial/missing values. Also, because it vastly simplified the implmentation.
+
+I am considering revamping the code again and using the new `exclude_if` feature from Pydantic, which may let me fix these other edge cases I was orginally going for while still simplifiying the implentation and allowing mypy to work better with the partials feature. For more details see this [issue](https://github.com/joshorr/pydantic-partials/issues/42).
+
+
 
 ## Quick Start
 
