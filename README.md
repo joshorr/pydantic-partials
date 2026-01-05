@@ -48,6 +48,8 @@ an API endpoint that you want PATCH-like behavior
 
 ## Important Upgrade from v2.x to 3.x Notes
 
+### Using `MISSING` 
+
 Switched to using the built-in MISSING value from Pydantic.
 `3.x` is fully backwards compatible with `2.x` except that `Mising` is now truthy (where it previously was falsy).
 
@@ -58,6 +60,15 @@ However, I have an option you can enable that can make it truly 100% backwards c
 
 If you call the `patch_missing_to_make_falsy` function it will patch `MISSING` to be falsy,
 and therefore `Missing` is falsey (`MISSING` and `Missing` are both the same exact value), like this:
+
+### mypy implications 
+
+mypy current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
+
+I went the route of using `MISSING` orginally because it made some edge cases (such as computed_fields) work with partial/missing values. Also, because it vastly simplified the implmentation.
+
+I am considering revamping the code again and using the new `exclude_if` feature from Pydantic, which may let me fix these other edge cases I was orginally going for while still simplifiying the implentation and allowing mypy to work better with the partials feature. For more details see this [issue](https://github.com/joshorr/pydantic-partials/issues/42).
+
 
 ```python
 from pydantic_partials import patch_missing_to_make_falsy
