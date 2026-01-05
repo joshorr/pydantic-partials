@@ -73,7 +73,7 @@ You may want `MISSING` to be falsey even if you don't need the backwards compata
 Since the patching is to a global type `MISSING`, it's opt-in only via `patch_missing_to_make_falsy` and not automatically applied.
 
 
-### mypy implications 
+### `mypy` Implications 
 
 mypy current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
 
