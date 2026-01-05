@@ -75,11 +75,11 @@ Since the patching is to a global type `MISSING`, it's opt-in only via `patch_mi
 
 ### `mypy` Implications 
 
-mypy current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
+`mypy` current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
 
 I went the route of using `MISSING` orginally because it made some edge cases (such as computed_fields) work with partial/missing values. Also, because it vastly simplified the implmentation.
 
-I am considering revamping the code again and using the new `exclude_if` feature from Pydantic, which may let me fix these other edge cases I was orginally going for while still simplifiying the implentation and allowing mypy to work better with the partials feature. For more details see this [issue](https://github.com/joshorr/pydantic-partials/issues/42).
+I am considering revamping the code again and using the new `exclude_if` feature from Pydantic, which may let me fix these other edge cases I was orginally going for while still simplifiying the implentation and allowing `mypy` to work better with the partials feature. For more details see this [issue](https://github.com/joshorr/pydantic-partials/issues/42).
 
 
 
