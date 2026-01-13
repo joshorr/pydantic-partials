@@ -35,6 +35,7 @@ mike = "^2"
 tomlkit = "^0"
 #pyright = "^1.1.341"
 setuptools = "*"
+pytest-mypy = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -50,11 +51,14 @@ minversion = "6.0"
 # (speeds up unit test starts after first unit test run)
 # If test-db schmea gets messed up, drop `--reuse-db`
 # and it will recreate db next time you run unit tests.
-addopts = "--verbose --pycodestyle"
+addopts = "--verbose --pycodestyle --mypy"
 
 testpaths = ["tests", "xurls"]
 python_files = "tests.py test_*.py *_tests.py tests/*"
 norecursedirs = "lib/* tests/scripts .serverless .eggs dist/* node_modules"
+
+[tool.mypy]
+exclude = ["tests/"]
 
 [tool.black]
 line-length = 99
