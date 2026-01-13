@@ -17,11 +17,12 @@ from pydantic import BaseModel
         + [Auto Partials Configuration](#auto-partials-configuration)
         + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
     * [Examples](#examples)
+    * [Limitations](#limitations)
 
 
 # Pydantic Partials
 
-Adds ability to have explcit or automatic partial fields for models. Supports but still works with mypy,
+Adds ability to have explicit or automatic partial fields for models. Supports but still works with mypy,
 along with additional added features, when compared to Pydantic's new experimental `MISSING` feature.
 
 - Explicit partial fields:
@@ -363,5 +364,10 @@ except ValidationError as e:
 else:
     raise Exception('Pydantic should have required `some_field`.')
 ```
+
+## Limitations
+
+Currently, the partial `Missing` value will be ignored when returned from `@computed_field`, and Pydantic will still export
+the computed field.
 
 [//]: # (--8<-- [end:readme])
