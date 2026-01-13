@@ -18,6 +18,10 @@ if TYPE_CHECKING:
     from .partial import PartialModel
 
 
+def _exclude_if_missing(v):
+    return v is Missing
+
+
 # metaclass to make all fields in a model optional, useful for PATCH requests
 class PartialMeta(ModelMetaclass):
     """ Metaclass of `pydantic_partials.partial.PartialModel`, used to support partial fields,
@@ -164,6 +168,16 @@ class PartialMeta(ModelMetaclass):
             v = fields[k]
             if v.default is PydanticUndefined and v.default_factory is None:
                 v.default = Missing
+                need_rebuild = True
+
+            if existing_exclude_if := v.exclude_if:
+                # Execute ours and their exclude if, if either returns `True`, then exclude it.
+                def combine_ignore_missing_check_with_existing_exclude_if(x, existing_exclude_if=existing_exclude_if):
+                    return _exclude_if_missing(x) or existing_exclude_if(x)
+                v.exclude_if = combine_ignore_missing_check_with_existing_exclude_if
+            else:
+                # Otherwise, we only have our method so directly set it.
+                v.exclude_if = _exclude_if_missing
                 need_rebuild = True
 
         cls.model_partial_fields = partial_fields

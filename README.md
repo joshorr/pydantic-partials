@@ -2,7 +2,9 @@ from pydantic import BaseModel
 
 - [Pydantic Partials](#pydantic-partials)
     * [Documentation](#documentation)
-    * [Important Upgrade from v2.x to 3.x Notes](#important-upgrade-from-v2x-to-3x-notes)
+    * [Important Upgrade from v2.x to 4.x Notes](#important-upgrade-from-v2x-to-4x-notes)
+    * [Important Upgrade from v3.x to 4.x Notes](#important-upgrade-from-v3x-to-4x-notes)
+    * [Important Upgrade from v1.x to 2.x, 3.x or 4.x Notes](#important-upgrade-from-v1x-to-2x-3x-or-4x-notes)
     * [Quick Start](#quick-start)
         + [Install](#install)
         + [Introduction](#introduction)
@@ -15,28 +17,32 @@ from pydantic import BaseModel
         + [Auto Partials Configuration](#auto-partials-configuration)
         + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
     * [Examples](#examples)
-    * [Important Upgrade from v1.x to 2.x Notes](#important-upgrade-from-v1x-to-2x-notes
+
 
 # Pydantic Partials
 
-Adds extra features using the new built-in `MISSING` feature from Pydantic.
+Adds ability to have explcit or automatic partial fields for models. Supports but still works with mypy,
+along with additional added features, when compared to Pydantic's new experimental `MISSING` feature.
 
-- An easy way to add or create automatically make all fields on a model partial-fields.
-  - For a Pydantic model via it's new `MISSING` feature.
-  - Makes all fields on a subclass automatically have the `MISSING` type annotation on them.
-  - All required fields (ie: no default value ) will have their default value set to `MISSING`.
-    - Makes all fields not required.
-- Optional patch to `MISSING` to make it falsy
-  - You have to enable this explicitly, it's opt-in.
-
-This can be handy when you want to take an existing class that has required fields and make them all not required.
-
-You can subclass the model and the subclass can automatically make all of it's required fields
-(ie: fields that don't have a default value), instead default them to `MISSING`.
-
-This makes it so all fields are not required anymore, and you can use this subclass in (for example)
-an API endpoint that you want PATCH-like behavior
-(where you can individually update specific fields on already existing model data).
+- Explicit partial fields:
+  - Use `some_field: Partial[str]` or `some_field: MissingType | str`
+    - pydantic-partials will automatically make `some_field` default to `Missing` if there is no default explicit defined,
+      thus making the field not-required.
+    - If preferred, you can explicitly define default to `Missing`: `some_field: Partial[str] = Missing` 
+- Automatic Partial Fields:
+  - An easy way to automatically make all fields on a model partial-fields.
+    - Makes all fields on a subclass automatically have the `MissingType` type annotation on them.
+    - All required fields (ie: no default value ) will have their default value set to `Missing`.
+      - ie: Makes all fields not required.
+  - If you subclass from a non-partial model, all fields in the subclass will be partial (without effecting parent model):
+    - ie: `class PatchUserModel(AutoPartialModel, UserModel):`
+      - This would create a subclass where all fields from the `UserModel` are automatically partial-fields.
+    - This can be handy when you want to take an existing class that has required fields and make them all not required. 
+    - You can subclass the model and the subclass can automatically make all of it's required fields
+      - (ie: fields that don't have a default value), instead default them to `Missing`. 
+    - This makes it so all fields are not required anymore, and you can use this subclass in
+      (for example) an API endpoint that you want PATCH-like behavior
+      (where you can individually update specific fields on already existing model data).
 
 [![PythonSupport](https://img.shields.io/static/v1?label=python&message=%203.10|%203.11|%203.12|%203.13&color=blue?style=flat-square&logo=python)](https://pypi.org/project/pydantic-partials/)
 
@@ -46,44 +52,24 @@ an API endpoint that you want PATCH-like behavior
 
 [//]: # (--8<-- [start:readme])
 
-## Important Upgrade from v2.x to 3.x Notes
+## Important Upgrade from v2.x to 4.x Notes
 
-### Using `MISSING` 
+It's completely backwards compatible, should be nothing to do.
 
-Switched to using the built-in MISSING value from Pydantic.
-`3.x` is fully backwards compatible with `2.x` except that `Mising` is now truthy (where it previously was falsy).
+## Important Upgrade from v3.x to 4.x Notes
 
-That means the `Missing` value is exactly the same as Pydantic's `MISSING` value.
-I kept the old name in place for backwards compatability, and for anyone who likes that capitalization better.
-
-However, I have an option you can enable that can make it truly 100% backwards compatbile/non-breaking:
-
-If you call the `patch_missing_to_make_falsy` function it will patch `MISSING` to be falsy,
-and therefore `Missing` is falsey (`MISSING` and `Missing` are both the same exact value), like this:
+Decided to not use built-in pydantic `MISSING` feature for now, due to its experimental nature.
+IDE's and mypy don't work well with it yet.
 
 
-```python
-from pydantic_partials import patch_missing_to_make_falsy
+## Important Upgrade from v1.x to 2.x, 3.x or 4.x Notes
 
-patch_missing_to_make_falsy()
-```
+I decided to make the default behavior of `PartialModel` not be automatic anymore.
 
-You may want `MISSING` to be falsey even if you don't need the backwards compatability.
+I made a new class named `AutoPartialModel` that works exactly the same as the old v1.x `PartialModel` previously did.
 
-Since the patching is to a global type `MISSING`, it's opt-in only via `patch_missing_to_make_falsy` and not automatically applied.
-
-
-### `mypy` Implications 
-
-`mypy` current does not support using `MISSING` when unioning it with another type, due to the `MISSING` being an experimental feature.
-
-I went the route of using `MISSING` orginally because it made some edge cases (such as computed_fields) work with partial/missing values. Also, because it vastly simplified the implmentation.
-
-I am considering revamping the code again and using the new `exclude_if` feature from Pydantic, which may let me fix these other edge cases I was orginally going for while still simplifiying the implentation and allowing `mypy` to work better with the partials feature.
-
-For more details see this [issue](https://github.com/joshorr/pydantic-partials/issues/42).
-
-
+To upgrade, simply replace `PartialModel` with `AutoPartialModel`, and things will work exactly as they did before.
+The `auto_partials` configuration option is still present and if present will still override the base-class setting.
 
 ## Quick Start
 
@@ -331,27 +317,6 @@ assert obj.required_decimal == Decimal('1.34')
 
 ### Explicitly Defined Partials - Basic Example
 
-Pydantic now supports the basic non-automatic style out of the box via `MISSING`, ie: 
-
-```python
-from pydantic import BaseModel
-from pydantic_core import MISSING
-
-class MyModel(BaseModel):
-    some_field: str
-    partial_field: str | MISSING = MISSING
-    
-```
-
-Previous to Pydantic v3.12, it had no `MISSING` feature and so the explicitly defeined partials
-was the way to do it.
-
-I've left it in for two reasons:
-
-1. Backwards compatability.
-2. It will still for any required (ie: no default value define) set the fields default value of any `MISSING` typed-fields to the `MISSING` value.
-    - This aspect is still might come in handy, depending on the situation.
-
 ## Examples
 
 Very basic example of a simple model with explicitly defined partial fields, follows:
@@ -398,15 +363,5 @@ except ValidationError as e:
 else:
     raise Exception('Pydantic should have required `some_field`.')
 ```
-
-## Important Upgrade from v1.x to 2.x Notes
-
-I decided to make the default behavior of `PartialModel` not be automatic anymore.
-
-I made a new class named `AutoPartialModel` that works exactly the same as the old v1.x `PartialModel` previously did.
-
-To upgrade, simply replace `PartialModel` with `AutoPartialModel`, and things will work exactly as they did before.
-The `auto_partials` configuration option is still present and if present will still override the base-class setting.
-
 
 [//]: # (--8<-- [end:readme])
