@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/joshorr/pydantic-partials/compare/v3.0.0...v4.0.0) (2026-01-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Change to use new pydantic `exclude_if` feature to implement partial fields.
+
+### Features
+
+* Change to use new pydantic `exclude_if` feature to implement partial fields. ([517764b](https://github.com/joshorr/pydantic-partials/commit/517764bcf82e46c7739d1897b93b1b0241824f10))
+
 ## [3.0.0](https://github.com/joshorr/pydantic-partials/compare/v2.0.2...v3.0.0) (2025-12-27)
 
 
