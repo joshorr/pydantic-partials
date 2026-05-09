@@ -183,3 +183,20 @@ def test_doc_example__auto_exclude__index__5():
         print(f'Pydantic will state `some_field` is required: {e}')
     else:
         raise Exception('Pydantic should have required `some_field`.')
+
+
+def test_doc_example__computed_fields__index__6():
+    from pydantic_partials import PartialModel, Missing, Partial, MissingType
+    from pydantic import ValidationError, computed_field
+
+    class Model(PartialModel):
+        # You could add 'MissingType' (ie: 'int | MissingType) as a return type if you want,
+        # but it is not necessary for it to work.
+        @computed_field()
+        def a_computed_field(self) -> int | MissingType:
+            return Missing
+
+        another_field: int = 2
+
+    obj = Model()
+    assert obj.model_dump() == {'another_field': 2}
