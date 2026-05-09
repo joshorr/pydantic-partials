@@ -128,46 +128,35 @@ def test_pre_existing_exclude_if_still_consulted():
     out = obj.model_dump_json()
 
 
-# TODO: Below are some exploration + tests for computed fields and the Missing feature.
-#   See this Pydantic issue (https://github.com/pydantic/pydantic/issues/12690).
-#
-# def test_computed_fields_excluded_when_missing():
-#     StrOrMissing = Annotated[int | MissingType, Field(exclude_if=lambda v: v is Missing)]
-#
-#     class TestModel(AutoPartialModel):
-#         some_fields_value: str
-#
-#         @computed_field
-#         def some_field(self) -> StrOrMissing:
-#             return self.some_fields_value
-#
-#     # Object should be able to be created without the `some_fields_value` due to `AutoPartialModel`.
-#     obj = TestModel()
-#     obj.some_fields_value is Missing
-#     obj.some_field is Missing
-#
-#     assert obj.model_dump() == {}
-#     obj.some_fields_value = 'str-value'
-#     assert obj.model_dump() == {'some_fields_value': 'str-value', 'some_field': 'str-value'}
-#
-#
-# def test_computed_fields_excluded_when_missing():
-#     IntExcludeZero = Annotated[int, Field(exclude_if=lambda v: v == 0)]
-#
-#     class Model(BaseModel):
-#         @computed_field
-#         def a_computed_field(self) -> IntExcludeZero:
-#             return 0
-#
-#     obj = Model()
-#     print(obj.model_dump())  # {"a_computed_field": 0 }
-#
-#     # # Object should be able to be created without the `some_fields_value` due to `AutoPartialModel`.
-#     # obj = TestModel()
-#     # obj.some_fields_value is Missing
-#     # obj.some_field is Missing
-#     #
-#     # assert obj.model_dump() == {}
-#     # obj.some_fields_value = 'str-value'
-#     # assert obj.model_dump() == {'some_fields_value': 'str-value', 'some_field': 'str-value'}
+def test_computed_fields_excluded_when_missing():
+    class Model(AutoPartialModel):
+        # You could add 'MissingType' (ie: 'int | MissingType) as a return type if you want,
+        # but it is not necessary for it to work.
+        @computed_field()
+        def a_computed_field(self) -> int | MissingType:
+            return Missing
 
+        h: int = 1
+
+    obj = Model()
+    assert obj.model_dump() == {"h": 1}
+
+
+def test_computed_fields_excluded_when_missing__with_pre_existing_exclude_if():
+    class Model(AutoPartialModel):
+        # You could add 'MissingType' (ie: 'int | MissingType) as a return type if you want,
+        # but it is not necessary for it to work.
+        @computed_field(exclude_if=lambda v: v is 0)
+        def a_computed_field(self) -> int | MissingType:
+            return self.h
+
+        h: int | MissingType = 1
+
+    obj = Model()
+    assert obj.model_dump() == {"h": 1, 'a_computed_field': 1}
+
+    obj.h = 0
+    assert obj.model_dump() == {"h": 0}
+
+    obj.h = Missing
+    assert obj.model_dump() == {}

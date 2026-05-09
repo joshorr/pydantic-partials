@@ -164,12 +164,13 @@ class PartialMeta(ModelMetaclass):
                     need_rebuild = True
 
         fields: dict[str, FieldInfo] = cls.model_fields  # type: ignore
-        for k in partial_fields:
-            v = fields[k]
-            if v.default is PydanticUndefined and v.default_factory is None:
+        for v in [*[fields[k] for k in partial_fields], *cls.model_computed_fields.values()]:
+            # Add a default to field to make it not required (ie: it can be 'missing' when validating).
+            if isinstance(v, FieldInfo) and v.default is PydanticUndefined and v.default_factory is None:
                 v.default = Missing
                 need_rebuild = True
 
+            # Check for pre-existing exclude_if, and consult it after I first check for `Missing` value.
             if existing_exclude_if := v.exclude_if:
                 # Execute ours and their exclude if, if either returns `True`, then exclude it.
                 def combine_ignore_missing_check_with_existing_exclude_if(x, existing_exclude_if=existing_exclude_if):
