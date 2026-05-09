@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/joshorr/pydantic-partials/compare/v4.0.0...v4.1.0) (2026-05-09)
+
+
+### Features
+
+* support `Missing` in computed fields. ([981ba40](https://github.com/joshorr/pydantic-partials/commit/981ba408b915802b3b87405ee4292458c838edd7))
+
 ## [4.0.0](https://github.com/joshorr/pydantic-partials/compare/v3.0.0...v4.0.0) (2026-01-13)
 
 
