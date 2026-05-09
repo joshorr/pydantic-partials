@@ -365,6 +365,27 @@ else:
     raise Exception('Pydantic should have required `some_field`.')
 ```
 
+## Computed Field Example
+
+If you return `Missing` from a computed-field, it will also be excluded:
+
+```python
+from pydantic_partials import PartialModel, Missing, Partial, MissingType
+from pydantic import ValidationError, computed_field
+
+class Model(PartialModel):
+    # You could add 'MissingType' (ie: 'int | MissingType) as a return type if you want,
+    # but it is not necessary for it to work.
+    @computed_field()
+    def a_computed_field(self) -> int | MissingType:
+        return Missing
+
+    another_field: int = 2
+
+obj = Model()
+assert obj.model_dump() == {'another_field': 2}
+```
+
 ## Limitations
 
 Currently, the partial `Missing` value will be ignored when returned from `@computed_field`, and Pydantic will still export
