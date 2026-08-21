@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.1.1](https://github.com/joshorr/pydantic-partials/compare/v4.1.0...v4.1.1) (2026-08-21)
+
+
+### Bug Fixes
+
+* limitation section in docs removed, it was incorrect (there is n… ([3466009](https://github.com/joshorr/pydantic-partials/commit/34660099d59c0f0e1b6df5f239d1e3000bed762f))
+* limitation section in docs removed, it was incorrect (there is no limitation anymore). ([68df029](https://github.com/joshorr/pydantic-partials/commit/68df029f8690afd010949e919aa70a745fc144d8))
+
 ## [4.1.0](https://github.com/joshorr/pydantic-partials/compare/v4.0.0...v4.1.0) (2026-05-09)
 
 
