@@ -17,7 +17,6 @@ from pydantic import BaseModel
         + [Auto Partials Configuration](#auto-partials-configuration)
         + [Explicitly Defined Partials - Basic Example](#explicitly-defined-partials---basic-example)
     * [Examples](#examples)
-    * [Limitations](#limitations)
 
 
 # Pydantic Partials
@@ -385,10 +384,5 @@ class Model(PartialModel):
 obj = Model()
 assert obj.model_dump() == {'another_field': 2}
 ```
-
-## Limitations
-
-Currently, the partial `Missing` value will be ignored when returned from `@computed_field`, and Pydantic will still export
-the computed field.
 
 [//]: # (--8<-- [end:readme])
